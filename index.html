@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paceon — Coming Soon</title>
+  <meta name="description" content="Paceon is an AI running coach. Adaptive training plans for 5K to marathon. Launching soon.">
+  <meta name="robots" content="noindex">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Paceon — AI Running Coach, Coming Soon">
+  <meta property="og:description" content="Training plans that change when life does. Drop your email to get 50% off on launch day.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://paceon.fit">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Paceon — AI Running Coach">
+  <meta name="twitter:description" content="Training plans that change when life does. Coming soon.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            coral:        '#C94B2A',
+            'coral-light':'#E8674A',
+            forest:       '#2A6948',
+            'forest-light':'#3D8B64',
+            ink:          '#1A1A18',
+            'ink-muted':  '#6B6B67',
+            cream:        '#EDE9E3',
+            amber:        '#D4822A',
+            bg:           '#F7F3EE',
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', 'Georgia', 'serif'],
+            body:    ['"DM Sans"', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background-color: #F7F3EE;
+      color: #1A1A18;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Subtle grain overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      opacity: 0.5;
+      z-index: 100;
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+    .fade-up   { animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.25s; }
+    .delay-300 { animation-delay: 0.42s; }
+    .delay-400 { animation-delay: 0.58s; }
+    .delay-500 { animation-delay: 0.72s; }
+
+    /* Input focus */
+    .email-input:focus {
+      outline: 2px solid #C94B2A;
+      outline-offset: 2px;
+    }
+
+    /* CTA hover */
+    .cta-btn:hover { background-color: #E8674A; }
+    .cta-btn:active { transform: scale(0.98); }
+
+    /* Dot separator */
+    .sep::before { content: '·'; padding: 0 0.5rem; }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+  <!-- ─── Nav ─── -->
+  <nav class="relative z-10 flex items-center justify-between px-6 sm:px-10 py-7 max-w-5xl mx-auto w-full">
+    <span style="font-family:'Playfair Display',Georgia,serif" class="text-xl font-bold tracking-tight text-ink select-none">
+      Paceon
+    </span>
+    <a
+      href="mailto:hello@paceon.fit"
+      class="text-sm text-ink-muted hover:text-ink transition-colors"
+      style="font-family:'DM Sans',system-ui,sans-serif"
+    >hello@paceon.fit</a>
+  </nav>
+
+  <!-- ─── Main ─── -->
+  <main class="relative z-10 flex-1 flex items-center justify-center px-6 py-10">
+    <div class="max-w-xl w-full text-center">
+
+      <!-- Eyebrow -->
+      <p class="fade-up delay-100 text-xs font-medium uppercase tracking-[0.2em] text-ink-muted mb-7"
+         style="font-family:'DM Sans',system-ui,sans-serif">
+        Coming soon
+      </p>
+
+      <!-- Headline -->
+      <h1 class="fade-up delay-200 text-5xl sm:text-6xl font-bold italic leading-[1.1] text-ink mb-7"
+          style="font-family:'Playfair Display',Georgia,serif">
+        Training plans that change<br class="hidden sm:block"> when life does.
+      </h1>
+
+      <!-- Subhead -->
+      <p class="fade-up delay-300 text-lg sm:text-xl text-ink-muted leading-relaxed mb-10"
+         style="font-family:'DM Sans',system-ui,sans-serif">
+        Paceon is an AI running coach for 5K to marathon.
+        <br class="hidden sm:block">
+        Drop your email and get
+        <strong class="text-coral font-semibold">50% off your first year</strong>
+        on launch day.
+      </p>
+
+      <!-- Form -->
+      <div class="fade-up delay-400">
+        <form
+          id="waitlist-form"
+          action="https://formspree.io/f/YOUR_FORM_ID"
+          method="POST"
+          class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+          novalidate
+        >
+          <!-- Hidden field to help with spam -->
+          <input type="text" name="_gotcha" style="display:none">
+
+          <input
+            type="email"
+            name="email"
+            placeholder="your@email.com"
+            required
+            autocomplete="email"
+            class="email-input flex-1 px-5 py-3.5 rounded-full border border-cream bg-white text-ink placeholder-ink-muted text-sm transition-all"
+            style="font-family:'DM Sans',system-ui,sans-serif"
+            aria-label="Email address"
+          >
+          <button
+            type="submit"
+            class="cta-btn px-7 py-3.5 bg-coral text-white font-medium text-sm rounded-full transition-all whitespace-nowrap"
+            style="font-family:'DM Sans',system-ui,sans-serif"
+          >
+            Notify me →
+          </button>
+        </form>
+
+        <!-- Success state -->
+        <div
+          id="success-msg"
+          class="hidden mt-5 inline-flex items-center gap-2 text-forest text-sm font-medium"
+          style="font-family:'DM Sans',system-ui,sans-serif"
+          role="alert"
+        >
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="9" stroke="#2A6948" stroke-width="1.5"/>
+            <path d="M6 10l3 3 5-5" stroke="#2A6948" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          You're on the list — we'll email you on launch day.
+        </div>
+
+        <!-- Error state -->
+        <div
+          id="error-msg"
+          class="hidden mt-5 text-coral text-sm"
+          style="font-family:'DM Sans',system-ui,sans-serif"
+          role="alert"
+        >
+          Something went wrong. Email us at
+          <a href="mailto:hello@paceon.fit" class="underline">hello@paceon.fit</a>
+        </div>
+      </div>
+
+      <!-- Decoration -->
+      <div class="fade-up delay-500 flex items-center justify-center gap-4 mt-14 opacity-25 select-none">
+        <div class="h-px w-16 bg-ink"></div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-ink">
+          <circle cx="12" cy="5" r="2"/>
+          <path d="M14 8l-1.5 4-3.5 2 1 6M10 12.5L8 17" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14 8l3.5 2.5" stroke-linecap="round"/>
+        </svg>
+        <div class="h-px w-16 bg-ink"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ─── Footer ─── -->
+  <footer class="relative z-10 flex items-center justify-center flex-wrap gap-x-0 px-6 py-6 text-xs text-ink-muted"
+          style="font-family:'DM Sans',system-ui,sans-serif">
+    <a href="https://miuustudio.com" target="_blank" rel="noopener noreferrer"
+       class="hover:text-ink transition-colors">A miuustudio product&nbsp;↗</a>
+    <span class="sep"></span>
+    <a href="/privacy.html" class="hover:text-ink transition-colors">Privacy</a>
+    <span class="sep"></span>
+    <span>© 2026 Paceon</span>
+  </footer>
+
+  <!-- ─── Form JS ─── -->
+  <script>
+    const form       = document.getElementById('waitlist-form');
+    const successMsg = document.getElementById('success-msg');
+    const errorMsg   = document.getElementById('error-msg');
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const btn = form.querySelector('button[type="submit"]');
+      const originalText = btn.textContent;
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(form.action, {
+          method:  'POST',
+          body:    new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+
+        if (res.ok) {
+          form.classList.add('hidden');
+          successMsg.classList.remove('hidden');
+        } else {
+          throw new Error('Non-OK response');
+        }
+      } catch {
+        errorMsg.classList.remove('hidden');
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }
+    });
+  </script>
+
+</body>
+</html>

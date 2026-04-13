@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paceon — AI Running Coach. Training plans that adapt.</title>
+  <meta name="description" content="Paceon is an AI running coach that builds your race plan in 2 minutes, then adapts every week to the runs you actually did. For 5K to marathon.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Paceon — Training plans that change when life does.">
+  <meta property="og:description" content="AI running coach. Adaptive plans for 5K to marathon. 7-day free trial, no credit card.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://paceon.fit">
+  <meta property="og:image" content="https://paceon.fit/assets/og-image.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Paceon — AI Running Coach">
+  <meta name="twitter:description" content="Training plans that change when life does.">
+  <meta name="twitter:image" content="https://paceon.fit/assets/og-image.png">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://paceon.fit">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            coral:         '#C94B2A',
+            'coral-light': '#E8674A',
+            forest:        '#2A6948',
+            'forest-light':'#3D8B64',
+            ink:           '#1A1A18',
+            'ink-muted':   '#6B6B67',
+            cream:         '#EDE9E3',
+            amber:         '#D4822A',
+            bg:            '#F7F3EE',
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', 'Georgia', 'serif'],
+            body:    ['"DM Sans"', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background-color: #F7F3EE;
+      color: #1A1A18;
+      -webkit-font-smoothing: antialiased;
+      margin: 0;
+    }
+
+    /* ── Typography shortcuts ── */
+    .font-display { font-family: 'Playfair Display', Georgia, serif; }
+    .font-body    { font-family: 'DM Sans', system-ui, sans-serif; }
+
+    /* ── Phone mockup ── */
+    .phone-wrap {
+      position: relative;
+      width: 260px;
+      flex-shrink: 0;
+    }
+    .phone-outer {
+      background: #18181A;
+      border-radius: 44px;
+      padding: 12px;
+      box-shadow:
+        0 0 0 1.5px #2d2d2f,
+        0 30px 60px rgba(0,0,0,0.22),
+        0 10px 20px rgba(0,0,0,0.1);
+    }
+    .phone-screen {
+      background: #F7F3EE;
+      border-radius: 34px;
+      overflow: hidden;
+      height: 520px;
+      position: relative;
+    }
+    .phone-island {
+      width: 90px; height: 26px;
+      background: #18181A;
+      border-radius: 0 0 16px 16px;
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      z-index: 10;
+    }
+
+    /* ── App UI inside phone ── */
+    .app-ui {
+      padding: 40px 14px 14px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .app-header-title { font-family: 'DM Sans', sans-serif; font-size: 11px; color: #6B6B67; font-weight: 500; }
+    .app-header-day   { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: #1A1A18; }
+
+    .today-card {
+      background: #EDE9E3;
+      border-radius: 18px;
+      padding: 14px;
+    }
+    .workout-badge {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: white;
+      background: #2A6948;
+      border-radius: 20px;
+      padding: 3px 9px;
+      margin-bottom: 8px;
+    }
+    .workout-distance {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: #1A1A18;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+    .workout-pace {
+      font-size: 11px;
+      color: #6B6B67;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+    .workout-note {
+      font-size: 10px;
+      color: #6B6B67;
+      font-style: italic;
+      line-height: 1.4;
+      border-left: 2px solid #C94B2A;
+      padding-left: 8px;
+      margin-bottom: 12px;
+    }
+    .card-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-complete {
+      flex: 1;
+      background: #C94B2A;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 7px 0;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: default;
+    }
+    .btn-skip {
+      background: none;
+      color: #6B6B67;
+      border: 1.5px solid #D4D0CA;
+      border-radius: 20px;
+      padding: 7px 12px;
+      font-size: 10px;
+      font-weight: 500;
+      cursor: default;
+    }
+
+    .plan-pulse {
+      background: #EDE9E3;
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .pulse-label { font-size: 10px; font-weight: 600; color: #1A1A18; }
+    .pulse-status {
+      font-size: 9px;
+      font-weight: 600;
+      color: #2A6948;
+      background: rgba(42,105,72,0.1);
+      padding: 3px 9px;
+      border-radius: 20px;
+    }
+
+    .race-countdown {
+      background: #EDE9E3;
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .countdown-label { font-size: 10px; font-weight: 500; color: #6B6B67; }
+    .countdown-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #C94B2A;
+    }
+    .countdown-unit { font-size: 9px; color: #6B6B67; }
+
+    /* ── Screenshot placeholder ── */
+    .screenshot-placeholder {
+      background: #EDE9E3;
+      border: 2px dashed rgba(26,26,24,0.15);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+      padding: 2rem;
+    }
+    .screenshot-placeholder p { font-size: 12px; color: #6B6B67; text-align: center; line-height: 1.6; }
+    .screenshot-placeholder code { font-size: 10px; color: #C94B2A; display: block; margin-top: 4px; }
+
+    /* ── Pricing cards ── */
+    .pricing-card {
+      background: white;
+      border: 1.5px solid #EDE9E3;
+      border-radius: 20px;
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .pricing-card.featured {
+      border-color: #C94B2A;
+      box-shadow: 0 0 0 3px rgba(201,75,42,0.08);
+    }
+    .pricing-card .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: white;
+      background: #C94B2A;
+      border-radius: 20px;
+      padding: 3px 10px;
+      margin-bottom: 4px;
+      align-self: flex-start;
+    }
+    .pricing-card .tier { font-size: 14px; font-weight: 600; color: #6B6B67; }
+    .pricing-card .price { font-family: 'Playfair Display', serif; font-size: 40px; font-weight: 700; color: #1A1A18; line-height: 1; }
+    .pricing-card .price sup { font-size: 20px; vertical-align: top; margin-top: 6px; font-family: 'DM Sans', sans-serif; font-weight: 400; }
+    .pricing-card .price-note { font-size: 13px; color: #6B6B67; }
+    .pricing-card hr { border: none; border-top: 1px solid #EDE9E3; margin: 8px 0; }
+    .pricing-card ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+    .pricing-card li { font-size: 13px; color: #1A1A18; display: flex; align-items: center; gap: 8px; }
+    .pricing-card li::before { content: '✓'; color: #2A6948; font-weight: 700; flex-shrink: 0; }
+    .pricing-card .cta-main {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      background: #C94B2A;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      margin-top: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .pricing-card .cta-main:hover { background: #E8674A; }
+    .pricing-card .cta-secondary {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      background: transparent;
+      color: #1A1A18;
+      border: 1.5px solid #EDE9E3;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      margin-top: 8px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .pricing-card .cta-secondary:hover { border-color: #C94B2A; }
+
+    /* ── FAQ ── */
+    details summary { cursor: pointer; list-style: none; }
+    details summary::-webkit-details-marker { display: none; }
+    details summary::marker { display: none; }
+    .faq-item {
+      border-bottom: 1px solid #EDE9E3;
+      padding: 20px 0;
+    }
+    .faq-item summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #1A1A18;
+    }
+    .faq-item summary .icon {
+      width: 20px; height: 20px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #C94B2A;
+      transition: transform 0.2s;
+    }
+    details[open] .faq-item summary .icon { transform: rotate(45deg); }
+    .faq-body {
+      padding-top: 12px;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #6B6B67;
+    }
+
+    /* ── Testimonial placeholder ── */
+    .testimonial-card {
+      background: white;
+      border: 1.5px solid #EDE9E3;
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 160px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .testimonial-card p { font-size: 13px; color: #6B6B67; line-height: 1.6; }
+    .testimonial-card code { font-size: 11px; color: #C94B2A; font-family: inherit; }
+
+    /* ── Nav ── */
+    .nav-cta {
+      background: #C94B2A;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: #E8674A; }
+
+    /* ── Section spacing helpers ── */
+    .section { padding: 80px 24px; }
+    .section-sm { padding: 60px 24px; }
+    .section-alt { background: #EDE9E3; }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: #C94B2A;
+      color: white;
+      border: none;
+      border-radius: 40px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-primary:hover  { background: #E8674A; }
+    .btn-primary:active { transform: scale(0.98); }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      font-size: 13px;
+      color: #6B6B67;
+      text-decoration: none;
+    }
+
+    /* ── Integration logos strip ── */
+    .integration-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #6B6B67;
+    }
+    .logo-pill {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════════
+       NAV
+  ════════════════════════════════════════════════ -->
+  <nav class="sticky top-0 z-50 border-b border-cream bg-bg/90 backdrop-blur-sm">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <span class="font-display text-xl font-bold tracking-tight text-ink">Paceon</span>
+      <a href="#" class="nav-cta font-body">Start free trial →</a>
+    </div>
+  </nav>
+
+
+  <!-- ═══════════════════════════════════════════════
+       1. HERO
+  ════════════════════════════════════════════════ -->
+  <section class="section max-w-6xl mx-auto" id="hero">
+    <div class="flex flex-col lg:flex-row items-center gap-14 lg:gap-16">
+
+      <!-- Text -->
+      <div class="flex-1 text-center lg:text-left">
+        <p class="font-body text-xs font-semibold uppercase tracking-[0.2em] text-coral mb-5">
+          Adaptive AI Running Coach
+        </p>
+        <h1 class="font-display text-5xl sm:text-6xl lg:text-[68px] font-bold italic leading-[1.08] text-ink mb-7">
+          Training plans that change<br> when life does.
+        </h1>
+        <p class="font-body text-xl text-ink-muted leading-relaxed mb-9 max-w-md mx-auto lg:mx-0">
+          Paceon builds your personalized race plan in 2 minutes, then adapts every week to the runs you actually did. For 5K to marathon.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+          <a href="#" class="btn-primary font-body">
+            Start 7-day free trial
+          </a>
+          <span class="btn-ghost font-body">No credit card required</span>
+        </div>
+        <p class="font-body text-xs text-ink-muted mt-5">
+          $9.99/mo after trial &nbsp;·&nbsp; Cancel anytime
+        </p>
+      </div>
+
+      <!-- Phone mockup -->
+      <div class="phone-wrap">
+        <div class="phone-outer">
+          <div class="phone-screen">
+            <div class="phone-island"></div>
+            <div class="app-ui">
+
+              <div class="app-header">
+                <div>
+                  <div class="app-header-title">Today</div>
+                  <div class="app-header-day">Tuesday</div>
+                </div>
+                <div style="font-size:9px; color:#6B6B67; text-align:right;">
+                  <div style="font-weight:600; color:#C94B2A;">Half Marathon</div>
+                  <div>in 23 days</div>
+                </div>
+              </div>
+
+              <div class="today-card">
+                <div class="workout-badge">Easy Run</div>
+                <div class="workout-distance">6 km</div>
+                <div class="workout-pace">5:50 / km &nbsp;·&nbsp; Zone 2</div>
+                <div class="workout-note">
+                  "Keep it conversational — you should be able to hold a full sentence."
+                </div>
+                <div class="card-actions">
+                  <button class="btn-complete">Mark Complete</button>
+                  <button class="btn-skip">Skip</button>
+                </div>
+              </div>
+
+              <div class="plan-pulse">
+                <div>
+                  <div class="pulse-label">Plan Pulse</div>
+                  <div style="font-size:9px; color:#6B6B67; margin-top:2px;">Week 6 of 12</div>
+                </div>
+                <div class="pulse-status">On Track ↑</div>
+              </div>
+
+              <div class="race-countdown">
+                <div class="countdown-label">Half Marathon · Oct 19</div>
+                <div>
+                  <span class="countdown-num">23</span>
+                  <span class="countdown-unit"> days</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       2. SOCIAL PROOF BAR
+  ════════════════════════════════════════════════ -->
+  <div class="section-alt section-sm">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12">
+      <p class="font-body text-xs font-semibold uppercase tracking-widest text-ink-muted">
+        Works with
+      </p>
+      <div class="flex items-center gap-8 flex-wrap justify-center">
+
+        <!-- Strava -->
+        <div class="integration-logo">
+          <div class="logo-pill" style="background:#FC4C02;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+              <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.599h4.172L10.463 0l-7 13.828h4.169"/>
+            </svg>
+          </div>
+          <span>Strava</span>
+        </div>
+
+        <!-- Apple Health -->
+        <div class="integration-logo">
+          <div class="logo-pill" style="background: linear-gradient(135deg, #fa2b56, #ff4c4c);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+              <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/>
+            </svg>
+          </div>
+          <span>Apple Health</span>
+        </div>
+
+        <!-- Garmin -->
+        <div class="integration-logo">
+          <div class="logo-pill" style="background: #1F6FAD;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/>
+            </svg>
+          </div>
+          <span>Garmin <span style="font-size:11px; color:#C94B2A; font-style:italic;">soon</span></span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       3. PROBLEM FRAME
+  ════════════════════════════════════════════════ -->
+  <section class="section max-w-4xl mx-auto text-center">
+    <h2 class="font-display text-4xl sm:text-5xl font-bold italic text-ink leading-tight mb-8">
+      Most training plans break by week three.
+    </h2>
+    <div class="font-body text-lg text-ink-muted leading-relaxed max-w-2xl mx-auto space-y-5">
+      <p>
+        You miss a Tuesday tempo because work ran late. Saturday's long run gets cut short
+        because your knee flared up. Sunday's recovery run becomes Monday. By week three,
+        the PDF plan you downloaded is fiction — and you're guessing.
+      </p>
+      <p>
+        Rigid plans assume perfect weeks. Real training isn't perfect.
+        Paceon adapts to the runs you actually finished, the paces you actually hit,
+        and the days you had to skip. Every week.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       4. FEATURE: ADAPTIVE
+  ════════════════════════════════════════════════ -->
+  <section class="section section-alt">
+    <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+
+      <!-- Text -->
+      <div class="flex-1 text-center lg:text-left">
+        <p class="font-body text-xs font-semibold uppercase tracking-widest text-coral mb-4">Adaptive planning</p>
+        <h2 class="font-display text-4xl sm:text-5xl font-bold italic text-ink leading-tight mb-6">
+          Your plan changes<br>when life does.
+        </h2>
+        <p class="font-body text-lg text-ink-muted leading-relaxed max-w-md mx-auto lg:mx-0">
+          Paceon watches your runs via Strava. Miss two workouts? Next week reduces volume.
+          Running 15% slower than target? Paces recalibrate. Nail a tempo better than expected?
+          The plan pushes harder. No re-downloading. No guessing what to skip. No plan guilt.
+        </p>
+      </div>
+
+      <!-- Visual placeholder -->
+      <div class="flex-1 w-full max-w-md">
+        <!-- Replace this placeholder with Plan Pulse screenshot from frontend/app/(app)/dashboard.tsx -->
+        <div class="screenshot-placeholder">
+          <div>
+            <p>
+              <strong>Screenshot needed:</strong><br>
+              Plan Pulse widget showing adaptation banner<br>
+              "Feeling the load? We reduced next week's mileage by 12%"
+            </p>
+            <code>frontend/app/(app)/dashboard.tsx</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       5. FEATURE: RESEARCH-BACKED
+  ════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="max-w-6xl mx-auto flex flex-col lg:flex-row-reverse items-center gap-12 lg:gap-16">
+
+      <!-- Text -->
+      <div class="flex-1 text-center lg:text-left">
+        <p class="font-body text-xs font-semibold uppercase tracking-widest text-coral mb-4">Training science</p>
+        <h2 class="font-display text-4xl sm:text-5xl font-bold italic text-ink leading-tight mb-6">
+          Built on running science.<br>Not vibes.
+        </h2>
+        <p class="font-body text-lg text-ink-muted leading-relaxed max-w-md mx-auto lg:mx-0">
+          Paceon's engine combines Jack Daniels' VDOT paces, the 80/20 intensity rule,
+          Hansons' specificity principles, and Hal Higdon's accessibility. Your easy runs
+          are actually easy (70% VO2max, not "what feels easy"). Your threshold pace is
+          your threshold. Taper is mandatory, not optional.
+        </p>
+        <!-- Intensity callout -->
+        <div class="mt-8 flex items-center gap-4 p-4 bg-cream rounded-2xl max-w-sm mx-auto lg:mx-0">
+          <div class="flex-1">
+            <div class="flex gap-1 mb-2">
+              <div class="h-2.5 rounded-full flex-1" style="background:#2A6948; flex: 4;"></div>
+              <div class="h-2.5 rounded-full" style="background:#C94B2A; flex: 1;"></div>
+            </div>
+            <p class="font-body text-xs text-ink-muted">80% easy &nbsp;·&nbsp; 20% quality</p>
+          </div>
+          <div class="font-body text-xs text-ink-muted border-l border-cream pl-4">
+            <div class="font-semibold text-ink text-sm">VDOT 48</div>
+            <div>Easy: 5:50/km</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual placeholder -->
+      <div class="flex-1 w-full max-w-md">
+        <!-- Replace with weekly plan view from frontend/app/(app)/plan/index.tsx -->
+        <div class="screenshot-placeholder">
+          <div>
+            <p>
+              <strong>Screenshot needed:</strong><br>
+              Week plan view with day cards,<br>status badges, coach notes
+            </p>
+            <code>frontend/app/(app)/plan/index.tsx</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       6. FEATURE: STRAVA-NATIVE
+  ════════════════════════════════════════════════ -->
+  <section class="section section-alt">
+    <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+
+      <!-- Text -->
+      <div class="flex-1 text-center lg:text-left">
+        <p class="font-body text-xs font-semibold uppercase tracking-widest text-coral mb-4">Auto-sync</p>
+        <h2 class="font-display text-4xl sm:text-5xl font-bold italic text-ink leading-tight mb-6">
+          Your runs auto-match<br>to your plan.
+        </h2>
+        <p class="font-body text-lg text-ink-muted leading-relaxed max-w-md mx-auto lg:mx-0">
+          Connect Strava once. Every run you log gets matched to the planned workout —
+          distance, pace, effort, elevation. See your completion rate, pace deviation, and
+          weekly load at a glance. No CSV exports. No manual logging.
+          No pretending you ran when you didn't.
+        </p>
+      </div>
+
+      <!-- Visual placeholder -->
+      <div class="flex-1 w-full max-w-md">
+        <!-- Replace with dashboard showing Strava run matched to plan -->
+        <div class="screenshot-placeholder">
+          <div>
+            <p>
+              <strong>Screenshot needed:</strong><br>
+              Dashboard with Strava run auto-matched<br>
+              "✓ Matched to Tue threshold · 98% pace match"
+            </p>
+            <code>frontend/app/(app)/dashboard.tsx</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       7. FEATURE: COURSES
+  ════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="max-w-6xl mx-auto flex flex-col lg:flex-row-reverse items-center gap-12 lg:gap-16">
+
+      <!-- Text -->
+      <div class="flex-1 text-center lg:text-left">
+        <p class="font-body text-xs font-semibold uppercase tracking-widest text-coral mb-4">Route library</p>
+        <h2 class="font-display text-4xl sm:text-5xl font-bold italic text-ink leading-tight mb-6">
+          Your real-world routes,<br>organized.
+        </h2>
+        <p class="font-body text-lg text-ink-muted leading-relaxed max-w-md mx-auto lg:mx-0">
+          Paceon pulls in your Strava routes and auto-sorts them by distance —
+          Short, Medium, Long, Ultra. See your best pace on each, elevation profile,
+          and run history. Find the right route for tomorrow's tempo run in five seconds.
+        </p>
+      </div>
+
+      <!-- Visual placeholder -->
+      <div class="flex-1 w-full max-w-md">
+        <!-- Replace with courses tab screenshot -->
+        <div class="screenshot-placeholder">
+          <div>
+            <p>
+              <strong>Screenshot needed:</strong><br>
+              Courses tab — 3 route cards with map polylines,<br>elevation, "PB: 42:18 · 6 times run"
+            </p>
+            <code>frontend/app/(app)/courses/index.tsx</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       8. PRICING
+  ════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="pricing">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="text-center mb-12">
+        <h2 class="font-display text-4xl sm:text-5xl font-bold italic text-ink mb-4">
+          One price. Every race.
+        </h2>
+        <p class="font-body text-lg text-ink-muted">
+          7-day free trial. No credit card required. Cancel anytime.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+
+        <!-- Monthly -->
+        <div class="pricing-card">
+          <div class="tier">Monthly</div>
+          <div class="price"><sup>$</sup>9.99</div>
+          <div class="price-note">per month</div>
+          <hr>
+          <ul>
+            <li>AI-adaptive training plan</li>
+            <li>Strava auto-sync</li>
+            <li>Course library</li>
+            <li>All future features</li>
+          </ul>
+          <a href="#" class="cta-secondary font-body">Start monthly</a>
+        </div>
+
+        <!-- Annual — featured -->
+        <div class="pricing-card featured">
+          <div class="badge">Most popular</div>
+          <div class="tier">Annual</div>
+          <div class="price"><sup>$</sup>79.99</div>
+          <div class="price-note">per year &nbsp;·&nbsp; <span style="color:#2A6948; font-weight:600;">33% off</span></div>
+          <hr>
+          <ul>
+            <li>Everything in Monthly</li>
+            <li>≈ $6.66/month</li>
+            <li>Priority support</li>
+            <li>Early feature access</li>
+          </ul>
+          <a href="#" class="cta-main font-body">Start annual →</a>
+        </div>
+
+        <!-- Founder Lifetime -->
+        <div class="pricing-card">
+          <div class="badge" style="background:#D4822A;">Founder</div>
+          <div class="tier">Lifetime</div>
+          <div class="price"><sup>$</sup>99</div>
+          <div class="price-note">one-time &nbsp;·&nbsp; <span style="color:#C94B2A;">first 500 only</span></div>
+          <hr>
+          <ul>
+            <li>Everything, forever</li>
+            <li>No annual renewals</li>
+            <li>Founder badge in-app</li>
+            <li>Direct line to the team</li>
+          </ul>
+          <a href="#" class="cta-secondary font-body">Claim founder access</a>
+        </div>
+
+      </div>
+
+      <p class="font-body text-sm text-ink-muted text-center mt-8">
+        Every plan includes unlimited AI plans, Strava sync, adaptive weekly updates,
+        course library, and all future features. No upsells.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       9. TESTIMONIALS (placeholder until beta)
+  ════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="text-center mb-12">
+        <h2 class="font-display text-4xl sm:text-5xl font-bold italic text-ink mb-4">
+          Early runners on Paceon.
+        </h2>
+        <p class="font-body text-sm text-ink-muted">Replace these placeholders with real beta user quotes before launch.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <!-- Placeholder cards — swap with real testimonials -->
+        <div class="testimonial-card">
+          <p>
+            "[Specific outcome with a number]. The week after I [life event],
+            Paceon automatically [specific feature]."
+          </p>
+          <code>— Name, Age · Race target</code>
+        </div>
+        <div class="testimonial-card">
+          <p>
+            "[Specific outcome with a number]. The week after I [life event],
+            Paceon automatically [specific feature]."
+          </p>
+          <code>— Name, Age · Race target</code>
+        </div>
+        <div class="testimonial-card">
+          <p>
+            "[Specific outcome with a number]. The week after I [life event],
+            Paceon automatically [specific feature]."
+          </p>
+          <code>— Name, Age · Race target</code>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       10. FAQ
+  ════════════════════════════════════════════════ -->
+  <section class="section section-alt">
+    <div class="max-w-3xl mx-auto">
+
+      <h2 class="font-display text-4xl sm:text-5xl font-bold italic text-ink text-center mb-12">
+        Questions.
+      </h2>
+
+      <div>
+
+        <details class="faq-item">
+          <summary class="font-body">
+            How is Paceon different from Runna?
+            <span class="icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </summary>
+          <div class="faq-body font-body">
+            Paceon plans adapt weekly based on your actual runs — if you miss workouts, run slower
+            than target, or skipped a day, your plan reshapes automatically. Runna plans are static.
+            We're also about half the price with no credit card required to start your trial.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="font-body">
+            Does Paceon work without Strava?
+            <span class="icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </summary>
+          <div class="faq-body font-body">
+            Yes, but Strava makes it significantly better. Without Strava, you mark workouts complete
+            manually. With Strava, runs auto-match to your plan and paces, effort levels, and
+            completion rates feed directly into weekly adaptations.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="font-body">
+            What races can I train for?
+            <span class="icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </summary>
+          <div class="faq-body font-body">
+            5K, 10K, half marathon, and full marathon. Plans range from 4 to 20 weeks depending
+            on your race date and starting fitness level.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="font-body">
+            What if I miss a workout?
+            <span class="icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </summary>
+          <div class="faq-body font-body">
+            Nothing bad happens. Paceon notices, adjusts next week's volume, and re-spaces your
+            hard days. Miss a few in a row and the plan reduces load automatically — no plan guilt,
+            no manual adjustment needed.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="font-body">
+            Can I use Paceon with Apple Watch or Garmin?
+            <span class="icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </summary>
+          <div class="faq-body font-body">
+            Apple Health integration works today. Garmin direct integration is coming soon.
+            Most Garmin users sync through Strava, which works fully now.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="font-body">
+            How much does it cost?
+            <span class="icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </summary>
+          <div class="faq-body font-body">
+            $9.99/month or $79.99/year after a 7-day free trial. No credit card required to start.
+            We also offer a one-time $99 founder lifetime plan, limited to the first 500 runners.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="font-body">
+            Can I cancel anytime?
+            <span class="icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </summary>
+          <div class="faq-body font-body">
+            Yes. Cancel from the app or your App Store subscription settings at any time.
+            You keep access until the end of your billing period.
+          </div>
+        </details>
+
+        <details class="faq-item" style="border-bottom: none;">
+          <summary class="font-body">
+            Who makes Paceon?
+            <span class="icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </summary>
+          <div class="faq-body font-body">
+            Paceon is built by <a href="https://miuustudio.com" target="_blank" rel="noopener"
+            style="color:#C94B2A; text-decoration: underline;">miuustudio</a>, a small indie studio.
+            We're runners ourselves — this is the tool we wanted and couldn't find.
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       11. CLOSING CTA
+  ════════════════════════════════════════════════ -->
+  <section class="section text-center">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-display text-4xl sm:text-5xl font-bold italic text-ink mb-8 leading-tight">
+        Ready for a plan that<br>keeps up with you?
+      </h2>
+      <a href="#" class="btn-primary font-body text-base mx-auto">
+        Start 7-day free trial
+      </a>
+      <p class="font-body text-sm text-ink-muted mt-5">
+        No credit card. Cancel anytime. Your race is closer than you think.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════════ -->
+  <footer class="border-t border-cream section-sm">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-ink-muted font-body">
+      <span class="font-display font-bold text-lg text-ink">Paceon</span>
+      <div class="flex flex-wrap items-center gap-4 justify-center">
+        <a href="/privacy.html" class="hover:text-ink transition-colors">Privacy</a>
+        <a href="/terms.html"   class="hover:text-ink transition-colors">Terms</a>
+        <a href="mailto:hello@paceon.fit" class="hover:text-ink transition-colors">hello@paceon.fit</a>
+      </div>
+      <div class="flex flex-col items-center sm:items-end gap-1">
+        <a href="https://miuustudio.com" target="_blank" rel="noopener noreferrer"
+           class="hover:text-ink transition-colors">A miuustudio product ↗</a>
+        <span class="text-xs">© 2026 Paceon. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+
+</body>
+</html>
