@@ -121,73 +121,6 @@
       color: #6B6B67;
     }
 
-    /* Pricing */
-    .pricing-card {
-      background: white;
-      border: 1.5px solid #EDE9E3;
-      border-radius: 20px;
-      padding: 28px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .pricing-card.featured {
-      border-color: #C94B2A;
-      box-shadow: 0 0 0 3px rgba(201,75,42,0.08);
-    }
-    .pricing-card .badge {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: white;
-      background: #C94B2A;
-      border-radius: 20px;
-      padding: 3px 10px;
-      margin-bottom: 4px;
-      align-self: flex-start;
-    }
-    .pricing-card .tier { font-size: 14px; font-weight: 600; color: #6B6B67; }
-    .pricing-card .price { font-family: 'Playfair Display', serif; font-size: 40px; font-weight: 700; color: #1A1A18; line-height: 1; }
-    .pricing-card .price sup { font-size: 20px; vertical-align: top; margin-top: 6px; font-family: 'DM Sans', sans-serif; font-weight: 400; }
-    .pricing-card .price-note { font-size: 13px; color: #6B6B67; }
-    .pricing-card hr { border: none; border-top: 1px solid #EDE9E3; margin: 8px 0; }
-    .pricing-card ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
-    .pricing-card li { font-size: 13px; color: #1A1A18; display: flex; align-items: center; gap: 8px; }
-    .pricing-card li::before { content: '✓'; color: #2A6948; font-weight: 700; flex-shrink: 0; }
-    .pricing-card .cta-main {
-      display: block;
-      width: 100%;
-      padding: 13px;
-      background: #C94B2A;
-      color: white;
-      border: none;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 600;
-      text-align: center;
-      text-decoration: none;
-      margin-top: 8px;
-      transition: background 0.2s;
-    }
-    .pricing-card .cta-main:hover { background: #E8674A; }
-    .pricing-card .cta-secondary {
-      display: block;
-      width: 100%;
-      padding: 13px;
-      background: transparent;
-      color: #1A1A18;
-      border: 1.5px solid #EDE9E3;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 600;
-      text-align: center;
-      text-decoration: none;
-      margin-top: 8px;
-      transition: border-color 0.2s;
-    }
-    .pricing-card .cta-secondary:hover { border-color: #C94B2A; }
 
     /* Integration logos */
     .integration-logo {
@@ -239,9 +172,12 @@
         <img src="assets/logos/icon.png" alt="Paceon icon" class="app-icon-nav">
         <span class="font-display text-xl font-bold tracking-tight text-ink">Paceon</span>
       </div>
-      <a href="https://apps.apple.com/us/app/paceon/id6761871711" class="nav-appstore" target="_blank" rel="noopener">
-        <img src="assets/logos/app-store-badge.svg" alt="Download on the App Store">
-      </a>
+      <div class="flex items-center gap-5">
+        <a href="/support.html" style="font-family:'DM Sans',system-ui,sans-serif" class="text-sm text-ink-muted hover:text-ink transition-colors">Support</a>
+        <a href="https://apps.apple.com/us/app/paceon/id6761871711" class="nav-appstore" target="_blank" rel="noopener">
+          <img src="assets/logos/app-store-badge.svg" alt="Download on the App Store">
+        </a>
+      </div>
     </div>
   </nav>
 
@@ -465,71 +401,18 @@
   </section>
 
 
-  <!-- ═══ PRICING ═══ -->
+  <!-- ═══ FREE FOR NOW ═══ -->
   <section class="section" id="pricing">
-    <div class="max-w-5xl mx-auto">
-
-      <div class="text-center mb-12">
-        <h2 class="font-display text-4xl sm:text-5xl font-bold italic text-ink mb-4">
-          One price. Every race.
-        </h2>
-        <p class="font-body text-lg text-ink-muted">
-          Free for everyone right now — no credit card, no catch. Limited time.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-
-        <div class="pricing-card">
-          <div class="tier">Monthly</div>
-          <div class="price"><sup>$</sup>9.99</div>
-          <div class="price-note">per month</div>
-          <hr>
-          <ul>
-            <li>AI-adaptive training plan</li>
-            <li>Strava auto-sync</li>
-            <li>Course library</li>
-            <li>All future features</li>
-          </ul>
-          <a href="https://apps.apple.com/us/app/paceon/id6761871711" target="_blank" rel="noopener" class="cta-secondary font-body">Download free</a>
-        </div>
-
-        <div class="pricing-card featured">
-          <div class="badge">Most popular</div>
-          <div class="tier">Annual</div>
-          <div class="price"><sup>$</sup>79.99</div>
-          <div class="price-note">per year &nbsp;·&nbsp; <span style="color:#2A6948; font-weight:600;">33% off</span></div>
-          <hr>
-          <ul>
-            <li>Everything in Monthly</li>
-            <li>≈ $6.66/month</li>
-            <li>Priority support</li>
-            <li>Early feature access</li>
-          </ul>
-          <a href="https://apps.apple.com/us/app/paceon/id6761871711" target="_blank" rel="noopener" class="cta-main font-body">Download free →</a>
-        </div>
-
-        <div class="pricing-card">
-          <div class="badge" style="background:#D4822A;">Founder</div>
-          <div class="tier">Lifetime</div>
-          <div class="price"><sup>$</sup>99</div>
-          <div class="price-note">one-time &nbsp;·&nbsp; <span style="color:#C94B2A;">first 500 only</span></div>
-          <hr>
-          <ul>
-            <li>Everything, forever</li>
-            <li>No annual renewals</li>
-            <li>Founder badge in-app</li>
-            <li>Direct line to the team</li>
-          </ul>
-          <a href="https://apps.apple.com/us/app/paceon/id6761871711" target="_blank" rel="noopener" class="cta-secondary font-body">Claim founder access</a>
-        </div>
-
-      </div>
-
-      <p class="font-body text-sm text-ink-muted text-center mt-8">
-        Every plan includes unlimited AI plans, Strava sync, adaptive weekly updates,
-        course library, and all future features. No upsells.
+    <div class="max-w-2xl mx-auto text-center">
+      <h2 class="font-display text-4xl sm:text-5xl font-bold italic text-ink mb-5">
+        Free for everyone,<br>for now.
+      </h2>
+      <p class="font-body text-lg text-ink-muted leading-relaxed mb-10">
+        Paceon is completely free while we're in early access. No credit card, no trial timer — just download and start training.
       </p>
+      <a href="https://apps.apple.com/us/app/paceon/id6761871711" class="appstore-badge inline-block" target="_blank" rel="noopener">
+        <img src="assets/logos/app-store-badge.svg" alt="Download on the App Store" style="height: 52px;">
+      </a>
     </div>
   </section>
 
@@ -632,8 +515,7 @@
             </span>
           </summary>
           <div class="faq-body font-body">
-            Paceon is free for everyone right now for a limited time. Paid plans ($9.99/month or $79.99/year) will launch soon.
-            We also offer a one-time $99 founder lifetime plan, limited to the first 500 runners.
+            Paceon is completely free right now while we're in early access. Paid plans will be introduced later — early users won't be surprised.
           </div>
         </details>
 
@@ -697,6 +579,7 @@
         <span class="font-display font-bold text-lg text-ink">Paceon</span>
       </div>
       <div class="flex flex-wrap items-center gap-4 justify-center">
+        <a href="/support.html" class="hover:text-ink transition-colors">Support</a>
         <a href="/privacy.html" class="hover:text-ink transition-colors">Privacy</a>
         <a href="/terms.html"   class="hover:text-ink transition-colors">Terms</a>
         <a href="mailto:hello@paceon.fit" class="hover:text-ink transition-colors">hello@paceon.fit</a>
